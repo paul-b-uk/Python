@@ -26,6 +26,27 @@ class TestActPy(unittest.TestCase):
         self.assertEqual(3,3)
         
     def test_aggregate_claims1(self):
+        # Situation where low freq, so some years have no claims
+        indiv_claims    = np.array([10.0, 9.0, 3.4])
+        claims_per_year = np.array([0, 0, 3])
+        expected        = np.array([0.0, 0.0, 22.4])        
+        actual          = act.aggregate_claims(indiv_claims, claims_per_year)
+        self.assertEqual(expected.tolist(), actual.tolist())
+        
+        indiv_claims    = np.array([10.0, 9.0, 3.4])
+        claims_per_year = np.array([1, 1, 1])
+        expected        = np.array([10.0, 9.0, 3.41])        
+        actual          = act.aggregate_claims(indiv_claims, claims_per_year)
+        #self.assertAlmostEqual(expected[2].tolist(), actual[2].tolist())
+        self.assertTrue(np.allclose(expected, actual, rtol=1e-05, atol=1e-08), 'Rag off')
+        
+        
+        indiv_claims    = np.array([10.0, 9.0, 3.4])
+        claims_per_year = np.array([0, 3])
+        expected        = np.array([0.0, 22.4])        
+        actual          = act.aggregate_claims(indiv_claims, claims_per_year)
+        self.assertEqual(expected.tolist(), actual.tolist())
+        
         indiv_claims    = np.array([10.0, 9.0, 3.4])
         claims_per_year = np.array([0, 3])
         expected        = np.array([0.0, 22.4])        
